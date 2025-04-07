@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "llm_dev_hugging_face"
+version = "0.0.1"
+description = ""
+authors = ["Ting-Chun Hung <jeffhong824@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+transformers = "4.50.2"
+fastapi = "0.115.12"
+uvicorn = "0.34.0"
+torch = "*"
+torchvision = "*"
+torchaudio = "*"
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.0.1"
+pytest = "^8.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

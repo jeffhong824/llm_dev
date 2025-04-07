@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HuggingFace Model Streaming Chat</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    #output {
+      white-space: pre-wrap;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 200px;
+      font-family: monospace;
+      position: relative;
+    }
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      background: black;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      50% { background: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Streaming Chat with HuggingFace Models</h1>
+
+  <label for="model">Model name (e.g. <code>gpt2</code>, <code>tiiuae/falcon-rw-1b</code>):</label><br />
+  <input type="text" id="model" placeholder="gpt2" style="width: 80%;" /><br /><br />
+
+  <label for="prompt">Enter your prompt:</label><br />
+  <input type="text" id="prompt" style="width: 80%;" />
+  <button onclick="sendPrompt()">Send</button>
+
+  <div id="output"><span id="content"></span><span class="cursor"></span></div>
+
+  <script>
+    let socket = null;
+
+    function sendPrompt() {
+      const prompt = document.getElementById("prompt").value.trim();
+      const model = document.getElementById("model").value.trim() || "gpt2";
+      const content = document.getElementById("content");
+      content.textContent = ""; // 清空舊內容
+
+      socket = new WebSocket("ws://localhost:8000/chat");
+
+      socket.onopen = () => {
+        // ✅ 傳 JSON 格式，含 prompt 與 model_name
+        socket.send(JSON.stringify({
+          prompt: prompt,
+          model: model
+        }));
+      };
+
+      socket.onmessage = (event) => {
+        const token = event.data;
+        if (token === "[END]") {
+          socket.close();
+        } else if (token.startsWith("[ERROR]")) {
+          content.textContent += "\n" + token; // 顯示錯誤訊息
+        } else {
+          content.textContent += token;
+        }
+      };
+
+      socket.onerror = () => {
+        content.textContent += "\n[Error connecting to server]";
+      };
+    }
+  </script>
+</body>
+</html>
