@@ -1,10 +1,11 @@
 --index-url https://download.pytorch.org/whl/cu124
 --extra-index-url https://pypi.org/simple
 
+torch
+torchvision
+torchaudio
 poetry==2.1.1
 transformers==4.50.2
 fastapi==0.115.12
 uvicorn==0.34.0
-torch
-torchvision
-torchaudio
+
