@@ -1,0 +1,25 @@
+Segment Anything (SA) introduced a foundation model for promptable segmentation in images (Kirillov et al.,
+2023). However an image is only a static snapshot of the real world in which visual segments can exhibit
+complex motion, and with the rapid growth of multimedia content, a significant portion is now recorded
+with a temporal dimension, particularly in video data. Many important applications in AR/VR, robotics,
+autonomous vehicles, and video editing require temporal localization beyond image-level segmentation. We
+believe a universal visual segmentation system should be applicable to both images and videos.
+Segmentation in video aims to determine the spatio-temporal extent of entities, which presents unique
+challenges beyond those in images. Entities can undergo significant changes in appearance due to motion,
+deformation, occlusion, lighting changes, and other factors. Videos often have lower quality than images due
+to camera motion, blur, and lower resolution. Further, efficient processing of a large number of frames is a
+key challenge. While SA successfully addresses segmentation in images, existing video segmentation models
+and datasets fall short in providing a comparable capability to “segment anything in videos”.
+We introduce the Segment Anything Model 2 (SAM 2), a unified model for video and image segmentation (we
+consider an image as a single-frame video). Our work includes a task, model, and dataset (see Fig. 1).
+We focus on the Promptable Visual Segmentation (PVS) task that generalizes image segmentation to the
+video domain. The task takes as input points, boxes, or masks on any frame of the video to define a segment of
+interest for which the spatio-temporal mask (i.e., a ‘masklet’) is to be predicted. Once a masklet is predicted,
+it can be iteratively refined by providing prompts in additional frames.
+Our model (§4) produces segmentation masks of the object of interest, in single images and across video
+frames. SAM 2 is equipped with a memory that stores information about the object and previous interactions,
+which allows it to generate masklet predictions throughout the video, and also effectively correct these based
+on the stored memory context of the object from previously observed frames. Our streaming architecture is a
+natural generalization of SAM to the video domain, processing video frames one at a time, equipped with a
+memory attention module to attend to the previous memories of the target object. When applied to images,
+the memory is empty and the model behaves like SAM.
